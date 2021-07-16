@@ -1,11 +1,10 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <!-- <form @submit.prevent="addtask"> -->
+    <h1>Welcome to the ToDo App implemented with Vue</h1>
     <div class="no-task" v-if="taskListSize === 0">There is no task.</div>
     <div class="tasks" v-else>
       <table class="completed-tasks">
-        <h1>completed</h1>
+        <h3>completed</h3>
         <tr v-for="taskItem in completedTasks" :key="taskItem.id" id="completed">
           <td>
             <input type="checkbox" v-model="taskItem.status" />
@@ -17,7 +16,7 @@
         </tr>
       </table>
       <table class="tasks">
-        <h1>uncompleted</h1>
+        <h3>uncompleted</h3>
         <tr v-for="taskItem in unCompletedTasks" :key="taskItem.id">
           <td>
             <input type="checkbox" default="unchecked" v-model="taskItem.status" />
@@ -44,9 +43,6 @@
 export default {
   name: "ToDo",
 
-  props: {
-    msg: String,
-  },
   data() {
     return {
       taskList: [],
@@ -71,12 +67,12 @@ export default {
   },
   methods: {
     getDate() {
-      var today = new Date();
-      var dd = String(today.getDate()).padStart(2, "0");
-      var mm = String(today.getMonth() + 1).padStart(2, "0");
-      var yyyy = today.getFullYear();
+      var date = new Date();
+      var day = String(date.getDate()).padStart(2, "0");
+      var month = String(date.getMonth() + 1).padStart(2, "0");
+      var year = date.getFullYear();
 
-      today = dd + "/" + mm + "/" + yyyy;
+      var today = day + "/" + month + "/" + year;
       return today;
     },
     makeTaskItem() {
@@ -95,11 +91,7 @@ export default {
       this.tempDescription = "";
     },
     changeStatusDone(taskItem) {
-      if (taskItem.status == true) {
-        taskItem.status = false;
-      } else {
-        taskItem.status = true;
-      }
+      taskItem.status = !taskItem.status;
     },
   },
 };
@@ -125,8 +117,3 @@ a {
   color: gray;
 }
 </style>
-
-
-baran   murat   ali kağan
-yasin   batu    ömer
-        taner    

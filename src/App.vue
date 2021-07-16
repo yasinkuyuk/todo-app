@@ -1,6 +1,8 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <ToDo msg="Welcome to Your ToDo Vue.js App"/>
+  <div>
+    <img alt="Vue logo" src="./assets/logo.png">
+    <ToDo/>
+  </div>
 </template>
 
 <script>
