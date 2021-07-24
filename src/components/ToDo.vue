@@ -17,12 +17,13 @@
         <tbody>
           <tr  v-for="taskItem in completedTasks" :key="taskItem.id">
           <td>
-            <button type="checkbox" default="unchecked" @click="changeStatusDone(taskItem)"></button>
+            <button type="checkbox" default="unchecked" @click="changeStatus(taskItem)"></button>
           </td>
           <td id="completed">{{ taskItem.title }}</td>
           <td id="completed">{{ taskItem.description }}</td>
           <td id="completed">{{ taskItem.dateCreated }}</td>
           <td>{{ taskItem.completedTime}}</td>
+          <button @click="deleteTask(taskItem)">Delete Task</button>
         </tr>
         </tbody>   
       </table>
@@ -39,11 +40,12 @@
         <tbody>
           <tr v-for="taskItem in unCompletedTasks" :key="taskItem.id">
             <td>
-              <button type="checkbox" default="unchecked" @click="changeStatusDone(taskItem)"></button>
+              <button type="checkbox" default="unchecked" @click="changeStatus(taskItem)"></button>
             </td>
             <td>{{ taskItem.title }}</td>
             <td>{{ taskItem.description }}</td>
             <td>{{ taskItem.dateCreated }}</td>
+            <button @click="deleteTask(taskItem)">Delete Task</button>
           </tr>
         </tbody>
       </table>
@@ -69,6 +71,7 @@ export default {
       taskList: [],
       tempTitle: "",
       tempDescription: "",
+      index: 0,
     };
   },
   computed: {
@@ -101,6 +104,7 @@ export default {
     },
     makeTaskItem() {
       const task = {
+        id: this.index,
         completedTime: "",
         title: this.tempTitle,
         description: this.tempDescription,
@@ -110,29 +114,40 @@ export default {
       return task;
     },
     addtask() {
-      this.taskList.push(this.makeTaskItem());
-      this.tempTitle = "";
-      this.tempDescription = "";
+      if(this.tempTitle != "" && this.tempDescription != ""){
+        this.taskList.push(this.makeTaskItem());
+        this.tempTitle = "";
+        this.tempDescription = "";
+        this.index += 1;
+      }
+      else {
+        alert("Please enter non-null task");
+      }
     },
-    changeStatusDone(taskItem) {
+    changeStatus(taskItem) {
       taskItem.completedTime = this.getDate();
-      console.log("time: ",taskItem.completedTime);
       taskItem.status = !taskItem.status;
     },
+    deleteTask(taskItem) {
+      delete this.taskList[taskItem.id];
+    }
   },
   watch: {
     taskList : {
       deep : true,
       handler(){
-        const taskList = this.taskList;
-        localStorage.setItem("taskList", JSON.stringify(taskList));
+        localStorage.setItem("taskList", JSON.stringify(this.taskList));
+        const index = String(this.index);
+        localStorage.setItem("lastIndex",index);
       }
     }
   },
   mounted(){
     const items = localStorage.getItem("taskList");
-    const taskList = JSON.parse(items ? items : "[]")
-    this.taskList = taskList;
+    this.taskList = JSON.parse(items ? items : "[]");
+    const lastIndex = localStorage.getItem("lastIndex");
+    const index  = lastIndex ? lastIndex : 0 ;
+    this.index = parseInt(index);
   }
 };
 </script>
@@ -155,10 +170,6 @@ a {
 #completed{
   text-decoration: line-through;
   color: gray;
-}
-
-.completed-tasks {
-  align-content: center;
 }
 
 caption {
